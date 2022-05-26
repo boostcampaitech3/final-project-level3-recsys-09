@@ -9,9 +9,8 @@ from recommenders.utils.python_utils import binarize
 
 
 class Data:
-    def __init__(self, config, args):
+    def __init__(self, config):
         self.config = config
-        self.args = args
 
         self.data_path = os.path.join(config["root_dir"], "data", config["data_name"])
 
@@ -82,7 +81,7 @@ class Data:
             self.test_set["itemID"].isin(self.unique_train_items)
         ]
 
-    def create_matrix(self):
+    def create_matrix(self) -> None:
         self.am_train = AffinityMatrix(
             df=self.train_set, items_list=self.unique_train_items
         )
@@ -105,7 +104,7 @@ class Data:
             self.test_map_items,
         ) = self.am_test.gen_affinity_matrix()
 
-    def split_dataset(self):
+    def split_dataset(self) -> None:
         self.val_data_tr, self.val_data_te = numpy_stratified_split(
             self.val_data, ratio=self.config["ratio"], seed=self.config["seed"]
         )

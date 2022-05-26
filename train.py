@@ -33,7 +33,7 @@ if __name__ == "__main__":
     save_path = os.path.join(config["root_dir"], "model", config["weights_name"])
     data_path = os.path.join(config["root_dir"], config["data_name"])
 
-    data = Data(config, args)
+    data = Data(config)
 
     model_without_anneal = Mult_VAE(
         n_users=data.train_data.shape[0],  # Number of unique users in the training set
