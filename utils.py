@@ -27,6 +27,8 @@ class Data:
         self.create_train_valid_test_users()
         self.get_data_set()
         self.unique_train_items = self.get_unique_train_items()
+        unique_train_items_path = os.path.join(config["root_dir"], "data", "train_items.npy")
+        np.save(unique_train_items_path, self.unique_train_items)
         self.create_val_test_set()
         self.create_matrix()
         self.split_dataset()

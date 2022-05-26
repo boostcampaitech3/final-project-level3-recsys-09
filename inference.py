@@ -20,11 +20,15 @@ def load_model():
     save_path = os.path.join(config["root_dir"], "model", config["weights_name"])
     data_path = os.path.join(config["root_dir"], config["data_name"])
 
-    data = Data(config)
+    # data = Data(config)
+    # print(data.train_data.shape[0])
+    # print(data.train_data.shape[1])
 
     model = Mult_VAE(
-        n_users=data.train_data.shape[0],  # Number of unique users in the training set
-        original_dim=data.train_data.shape[1],  # Number of unique items in the training set
+        # n_users=data.train_data.shape[0],  # Number of unique users in the training set
+        # original_dim=data.train_data.shape[1],  # Number of unique items in the training set
+        n_users=13097,
+        original_dim=63750,
         intermediate_dim=config["intermediate_dim"],
         latent_dim=config["latent_dim"],
         n_epochs=config["epochs"],
