@@ -20,15 +20,12 @@ def load_model():
     save_path = os.path.join(config["root_dir"], "model", config["weights_name"])
     data_path = os.path.join(config["root_dir"], config["data_name"])
 
-    # data = Data(config)
-    # print(data.train_data.shape[0])
-    # print(data.train_data.shape[1])
+    with open("./data/data_shape.txt", "r", encoding="utf-8") as g:
+        data_shape = g.readlines()
 
     model = Mult_VAE(
-        # n_users=data.train_data.shape[0],  # Number of unique users in the training set
-        # original_dim=data.train_data.shape[1],  # Number of unique items in the training set
-        n_users=13097,
-        original_dim=63750,
+        n_users=int(data_shape[0]),
+        original_dim=int(data_shape[1]),
         intermediate_dim=config["intermediate_dim"],
         latent_dim=config["latent_dim"],
         n_epochs=config["epochs"],
@@ -42,7 +39,7 @@ def load_model():
         annealing=False,
         beta=1.0,
     )
-    model_path = os.path.join(config['root_dir'], 'model', config['weights_name'])
+    model_path = os.path.join(config["root_dir"], "model", config["weights_name"])
     model.model.load_weights(model_path)
 
     return model

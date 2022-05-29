@@ -37,7 +37,9 @@ if __name__ == "__main__":
 
     model_without_anneal = Mult_VAE(
         n_users=data.train_data.shape[0],  # Number of unique users in the training set
-        original_dim=data.train_data.shape[1],  # Number of unique items in the training set
+        original_dim=data.train_data.shape[
+            1
+        ],  # Number of unique items in the training set
         intermediate_dim=config["intermediate_dim"],
         latent_dim=config["latent_dim"],
         n_epochs=config["epochs"],
@@ -51,6 +53,11 @@ if __name__ == "__main__":
         annealing=False,
         beta=1.0,
     )
+
+    with open("./data/data_shape.txt", "w") as f:
+        data_list = [data.train_data.shape[0], data.train_data.shape[1]]
+        for i in data_list:
+            f.write("%d \n" % i)
 
     with Timer() as t:
         model_without_anneal.fit(
