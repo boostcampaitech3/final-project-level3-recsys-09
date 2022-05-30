@@ -8,11 +8,15 @@ import pymongo # import
 from pymongo import MongoClient
 from bson.json_util import loads, dumps
 
+# exception handler
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
+
 import requests
 import json
 import urllib
 
-from inference import load_model
+# from inference import load_model
 from recommenders.datasets.sparse import AffinityMatrix
 from recommenders.utils.python_utils import binarize
 import pandas as pd
@@ -33,10 +37,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-df = pd.read_csv("book.csv")
-#a = df.set_index('asin').T.to_dict('list')
-b = list(df['asin'])
 
 @app.get("/rand/{idx}")
 def read_item1(idx):
@@ -95,8 +95,6 @@ def get_imglist(lists):
     
 @app.get("/db/{asin}")
 def get_item(asin):
-    
-
     client = MongoClient(mongodb_client)
     db = client["amazon"]
     collection = db["books"]
@@ -104,6 +102,23 @@ def get_item(asin):
     cursor = collection.find(query, projection={'_id': False})
     result = loads(dumps(cursor))
     return result
+
+
+@app.get("/db_update/{asin}")
+def db_update(asin: str, reviewer_id: str, overall: Optional[int] = 3, review_text: Optional[str] = None):
+    client = MongoClient(mongodb_client)
+    db = client["amazon"]
+    collection = db["train"]
+    if review_text:
+        query = {'asin': asin, 'reviewerID': reviewer_id, 'overall': overall, 'reviewText': review_text}
+    else:
+        query = {'asin': asin, 'reviewerID': reviewer_id, 'overall': overall}
+    try:
+        cursor = collection.insert_one(query)
+        return "done"
+    except:
+        return "fail"
+
 
 @app.get("/ddb/{asin}")
 def get_item(asin):
@@ -149,19 +164,6 @@ def get_item(asin):
     
     for record in cursor:
         return record
-
-
-@app.get("/dddb/{asin}")
-def get_1111(asin):
-    client = pymongo.MongoClient("mongodb+srv://recsys09:recsys09@recsys09.jsi8u.mongodb.net/?retryWrites=true&w=majority")
-    # db(=database): "recsys09"의 "amazon" 데이터베이스
-    db = client["amazon"]
-    # Collection(=table): "amazon" 데이터 베이스의 "books" 테이블
-    Collection = db["books"]
-    
-    query = {'asin': asin}
-    cursor = Collection.find(query)
-    return cursor
     
 @app.get("/inference/{lists}")
 def getpredict(lists):
@@ -192,3 +194,7 @@ def getpredict(lists):
     return list(top_k_df['itemID'].values)
     
     #return list(top_k)
+
+import uvicorn
+if __name__ == '__main__':
+    uvicorn.run(app, host="0.0.0.0", port=30006)
