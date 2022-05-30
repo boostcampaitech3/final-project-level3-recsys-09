@@ -6,6 +6,8 @@ from typing import List, Optional
 from pydantic import BaseModel
 import pymongo # import
 from pymongo import MongoClient
+from bson.json_util import loads, dumps
+
 import requests
 import json
 import urllib
