@@ -94,11 +94,13 @@ def get_imglist(lists):
     
 @app.get("/db/{asin}")
 def get_item(asin):
-    client = MongoClient("mongodb://1.215.198.77:27017/")
+    client = MongoClient(mongodb_client)
+    db = client["amazon"]
+    collection = db["train"]
     query = {'asin': asin}
-    result = client.recsys09.final.find_one(query)
-    
-    return result['title']
+    cursor = collation.find(query, projection={'_id': False})
+    result = loads(dumps(cursor))
+    return result
 
 @app.get("/ddb/{asin}")
 def get_item(asin):
