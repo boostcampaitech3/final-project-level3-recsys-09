@@ -6,6 +6,8 @@ from typing import List, Optional
 from pydantic import BaseModel
 import pymongo # import
 from pymongo import MongoClient
+from bson.json_util import loads, dumps
+
 import requests
 import json
 import urllib
@@ -21,6 +23,8 @@ import time
 origins = ["*"]
 
 app = FastAPI()
+
+mongodb_client = "mongodb://118.67.143.144:30001/"
 
 app.add_middleware(
     CORSMiddleware,
@@ -50,7 +54,6 @@ def read_item2(asin):
     header = {'Authorization': 'KakaoAK ' + MY_REST_API }
     response = requests.get(url, headers=header, params=queryString)
     tokens = response.json()
-
     try:    
         return tokens["documents"][0]["thumbnail"]
     except:
@@ -92,15 +95,19 @@ def get_imglist(lists):
     
 @app.get("/db/{asin}")
 def get_item(asin):
-    client = MongoClient("mongodb://1.215.198.77:27017/")
-    query = {'asin': asin}
-    result = client.recsys09.final.find_one(query)
     
-    return result['title']
+
+    client = MongoClient(mongodb_client)
+    db = client["amazon"]
+    collection = db["books"]
+    query = {'asin': asin}
+    cursor = collection.find(query, projection={'_id': False})
+    result = loads(dumps(cursor))
+    return result
 
 @app.get("/ddb/{asin}")
 def get_item(asin):
-    client = pymongo.MongoClient("mongodb+srv://recsys09:recsys09@recsys09.jsi8u.mongodb.net/?retryWrites=true&w=majority")
+    client = pymongo.MongoClient(mongodb_client)
     db = client["amazon"]
     collection = db["books"]
     naver_client_id = "EZKJjFYCeCFKfj3qk2OM"
@@ -108,8 +115,8 @@ def get_item(asin):
     kakao_API_url = "https://dapi.kakao.com//v3/search/book"
     Kakao_MY_REST_API = 'a9f59d8981601a41b5fb31311b82b8a4'
     # ↑--- 고정 ---↑
-    input_text = 'asin_number'
-    query = {'asin': asin}
+    input_text = asin
+    query = {'asin': input_text}
     cursor = collection.find(query)
     '''
     if cursor['imageURL'] == '':
