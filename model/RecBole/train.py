@@ -10,7 +10,8 @@ import wandb
 
 
 if __name__ == "__main__":
-
+    wandb.init(project="Books_Recommendation", entity="lg960214")
+    
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', '-m', type=str, default='BPR', help='name of models')
     parser.add_argument('--dataset', '-d', type=str, default='boostcamp', help='name of datasets')
