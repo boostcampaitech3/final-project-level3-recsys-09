@@ -33,10 +33,10 @@ os.makedirs(TARGET_DIR, exist_ok=True)
 
 df = df.rename(
     columns={
-        "user": "user_id:token",
-        "item": "item_id:token",
+        "userID": "user_id:token",
+        "itemID": "item_id:token",
         "rating": "rating:float",
-        "time": "timestamp:float",
+        "timestamp": "timestamp:float",
     }
 )
 df.to_csv(os.path.join(TARGET_DIR, TARGET_NAME), index=False, sep="\t")

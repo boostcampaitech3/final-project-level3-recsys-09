@@ -6,9 +6,11 @@ from recbole.config import Config
 from recbole.data import create_dataset, data_preparation
 from recbole.trainer import Trainer
 from recbole.utils import init_seed, init_logger, get_model
+import wandb
 
 
 if __name__ == "__main__":
+
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', '-m', type=str, default='BPR', help='name of models')
     parser.add_argument('--dataset', '-d', type=str, default='boostcamp', help='name of datasets')
@@ -50,7 +52,3 @@ if __name__ == "__main__":
 
     # model training
     best_valid_score, best_valid_result = trainer.fit(train_data, valid_data)
-
-    # model evaluation
-    # test_result = trainer.evaluate(test_data)
-    # print(test_result)

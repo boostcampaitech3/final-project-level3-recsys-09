@@ -5,7 +5,7 @@ seed: 2020
 state: 'INFO'
 encoding: 'utf-8'
 reproducibility: True
-data_path: data
+data_path: /workspace/data/
 checkpoint_dir: 'saved/'
 show_progress: True
 save_dataset: False
@@ -29,7 +29,6 @@ epochs: 1000
 train_batch_size: 128
 learner: 'adam'
 learning_rate: 0.001
-neg_sampling: None # MultiVAE is a non-sampling model
 eval_step: 1
 stopping_step: 10
 loss_decimal_place: 4
@@ -47,7 +46,7 @@ n_dec_epochs: 1
 
 #Evaluation Settings
 eval_args:
-    split: {"LS": 'test_only'}
+    split: {'RS':[0.8, 0.1, 0.1]}
     group_by: user
     order: RO
     mode: full
@@ -58,4 +57,4 @@ valid_metric: Recall@10
 eval_batch_size: 4096
 metric_decimal_place: 4
 
-load_col: {"inter": ["user_id", "item_id", "timestamp"]}
+load_col: {"inter": ["user_id", "item_id", "rating", "timestamp"]}
