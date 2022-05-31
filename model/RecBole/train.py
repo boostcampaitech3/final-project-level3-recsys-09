@@ -10,7 +10,7 @@ import wandb
 
 
 if __name__ == "__main__":
-    wandb.init(project="Books_Recommendation", entity="lg960214")
+    wandb.init(project="Books_Recommendation", entity="recsys09")
     
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', '-m', type=str, default='BPR', help='name of models')
