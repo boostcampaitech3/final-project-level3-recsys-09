@@ -6,6 +6,8 @@ from recommenders.datasets.split_utils import min_rating_filter_pandas
 from recommenders.datasets.sparse import AffinityMatrix
 from recommenders.datasets.python_splitters import numpy_stratified_split
 from recommenders.utils.python_utils import binarize
+import pymongo
+from pymongo import MongoClient
 
 
 class Data:
@@ -14,7 +16,13 @@ class Data:
 
         self.data_path = os.path.join(config["root_dir"], "data", config["data_name"])
 
-        self.df = self.load_parquet_file(self.data_path)
+        if config["data_source"] == "mongodb":
+            self.df = self.load_data_from_mongodb()
+        elif config["data_source"] == "parquet":
+            self.df = self.load_parquet_file(self.data_path)
+        else:
+            raise ValueError("Data source is not defined.")
+
         self.df_preferred, self.df_low_rating = self.binarize_data(
             config["threshhold"], self.df
         )
@@ -27,7 +35,9 @@ class Data:
         self.create_train_valid_test_users()
         self.get_data_set()
         self.unique_train_items = self.get_unique_train_items()
-        unique_train_items_path = os.path.join(config["root_dir"], "data", "train_items.npy")
+        unique_train_items_path = os.path.join(
+            config["root_dir"], "data", "train_items.npy"
+        )
         np.save(unique_train_items_path, self.unique_train_items)
         self.create_val_test_set()
         self.create_matrix()
@@ -36,6 +46,24 @@ class Data:
     def load_parquet_file(self, data_path: str) -> pd.DataFrame:
         df = pd.read_parquet(data_path, engine="pyarrow")
         df = df[["reviewerID", "asin", "overall", "unixReviewTime"]]
+        df.columns = ["userID", "itemID", "rating", "timestamp"]
+        return df
+
+    def load_data_from_mongodb(self):
+        client = MongoClient("mongodb://118.67.143.144:30001/")
+        db = client["amazon"]
+        Collection = db["train"]
+        cursor = Collection.find(
+            {},
+            projection={
+                "_id": False,
+                "reviewerID": True,
+                "asin": True,
+                "overall": True,
+                "unixReviewTime": True,
+            },
+        )
+        df = pd.DataFrame.from_dict(cursor)
         df.columns = ["userID", "itemID", "rating", "timestamp"]
         return df
 

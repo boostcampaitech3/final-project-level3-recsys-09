@@ -12,6 +12,7 @@ root_dir: "/opt/ml/final/final-project-level3-recsys-09"
 weights_name: "mvae_weights.hdf5"
 
 data_name: "book_user_2014_5.parquet"
+data_source: "mongodb"
 
 threshhold: 3.5
 user_min_rating: 50

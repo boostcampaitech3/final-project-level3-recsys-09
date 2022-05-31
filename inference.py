@@ -18,7 +18,6 @@ def load_model():
     tf2.disable_v2_behavior()
 
     save_path = os.path.join(config["root_dir"], "model", config["weights_name"])
-    data_path = os.path.join(config["root_dir"], config["data_name"])
 
     with open("./data/data_shape.txt", "r", encoding="utf-8") as g:
         data_shape = g.readlines()
