@@ -9,7 +9,7 @@ python make_data.py
 2. Model training
 
 ```
-python train.py --config_files [model.yaml]
+python train.py --config_files [model.yaml] --model [model]
 ```
 
 + model.yaml 파일은 config folder 내에 위치
