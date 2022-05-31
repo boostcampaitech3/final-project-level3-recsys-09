@@ -12,7 +12,7 @@ python make_data.py
 python train.py --config_files [model.yaml] --model [model]
 ```
 
-+ model.yaml 파일은 [config] 디렉토리 내부에 위치
++ yaml 파일은 [config] 디렉토리 내부에 위치
 
 
 
