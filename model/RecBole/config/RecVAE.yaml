@@ -12,8 +12,8 @@ save_dataset: False
 dataset_save_path: None
 save_dataloaders: False
 dataloaders_save_path: None
-log_wandb: False
-wandb_project: 'recbole'
+log_wandb: True
+wandb_project: 'Books_Recommendation'
 
 # Data Settings
 USER_ID_FIELD: user_id
@@ -30,7 +30,7 @@ train_batch_size: 128
 learner: 'adam'
 learning_rate: 0.001
 eval_step: 1
-stopping_step: 10
+stopping_step: 5
 loss_decimal_place: 4
 weight_decay: 0.000
 
