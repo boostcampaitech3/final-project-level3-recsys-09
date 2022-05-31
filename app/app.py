@@ -153,15 +153,18 @@ def get_item(asin):
 
 @app.get("/dddb/{asin}")
 def get_1111(asin):
-    client = pymongo.MongoClient("mongodb+srv://recsys09:recsys09@recsys09.jsi8u.mongodb.net/?retryWrites=true&w=majority")
+    client = pymongo.MongoClient(mongodb_client)
     # db(=database): "recsys09"의 "amazon" 데이터베이스
     db = client["amazon"]
     # Collection(=table): "amazon" 데이터 베이스의 "books" 테이블
-    Collection = db["books"]
+    Collection = db["url"]
     
     query = {'asin': asin}
-    cursor = Collection.find(query)
-    return cursor
+    cursor = Collection.find_one(filter=query ,projection={'image_url' : True})
+    try:
+        return cursor['image_url'][0]
+    except:
+        return read_item2(asin)
     
 @app.get("/inference/{lists}")
 def getpredict(lists):
