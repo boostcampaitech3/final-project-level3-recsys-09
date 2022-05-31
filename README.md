@@ -20,9 +20,11 @@ python train.py --config_files [model.yaml] --model [model]
 
 +++ RecVAE 실행 시 오류 해결
 
+```
 TypeError: calculate_loss() missing 1 required positional argument: 'encoder_flag'
+```
 
-위 오류는, /opt/conda/lib/python3.8/site-packages/recbole/trainer/trainer.py 에서
+위 오류는, '''/opt/conda/lib/python3.8/site-packages/recbole/trainer/trainer.py''' 에서
 ```
 def calculate_loss(self, interaction, encoder_flag)
 -> def calculate_loss(self, interaction, encoder_flag=True)
