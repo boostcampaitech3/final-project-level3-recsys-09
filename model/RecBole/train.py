@@ -1,5 +1,5 @@
 import argparse
-import os
+import os, sys
 from recbole.config import Config
 from logging import getLogger
 from recbole.config import Config
@@ -10,14 +10,16 @@ import wandb
 
 
 if __name__ == "__main__":
-    wandb.init(project="Books_Recommendation", entity="recsys09")
-    
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', '-m', type=str, default='BPR', help='name of models')
     parser.add_argument('--dataset', '-d', type=str, default='boostcamp', help='name of datasets')
     parser.add_argument('--config_files', type=str, default=None, help='config files')
 
     args = parser.parse_args()
+    
+    wandb_name = (str(args.model)+'-default')
+
+    wandb.init(project="Books_Recommendation", entity="recsys09", name=wandb_name)
 
     if args.config_files.endswith('.yaml'):
         args.config_files = os.path.join('./config', args.config_files)
