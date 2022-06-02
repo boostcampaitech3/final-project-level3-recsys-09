@@ -236,3 +236,13 @@ tags
 *.code-workspace
 
 # End of https://www.toptal.com/developers/gitignore/api/linux,python,visualstudiocode,vim,jupyternotebooks
+
+# etc
+data/
+log/
+log_tensorboard/
+model/
+saved/
+wandb/
+*.csv
+*.parquet

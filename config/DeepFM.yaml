@@ -44,7 +44,7 @@ unused_col:
 epochs: 100
 train_batch_size: 2048
 learner: 'adam'
-learning_rate: 0.01
+learning_rate: 0.001
 # neg_sampling: None
     # uniform: 1
     # dynamic: 2
@@ -61,8 +61,10 @@ eval_args:
     mode: full
 metrics: ['Recall', 'MRR', 'NDCG', 'Hit', 'Precision']
 topk: 10
-valid_metric: NDCG@10
+valid_metric: Recall@10
 eval_batch_size": 4096
 #########################################################
 # Hyperparameter
-embedding_size: 20
+embedding_size: 50
+mlp_hidden_size: [128, 64, 32]
+dropout_prob: 0.2

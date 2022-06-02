@@ -6,23 +6,30 @@ from recbole.config import Config
 from recbole.data import create_dataset, data_preparation
 from recbole.trainer import Trainer
 from recbole.utils import init_seed, init_logger, get_model
+import wandb
 
 
 if __name__ == "__main__":
+    
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', '-m', type=str, default='BPR', help='name of models')
-    parser.add_argument('--dataset', '-d', type=str, default='boostcamp', help='name of datasets')
-    parser.add_argument('--config_files', type=str, default=None, help='config files')
+    parser.add_argument('--dataset', '-d', type=str, default='train', help='name of datasets')
+    parser.add_argument('--config_files', '-c', type=str, default=None, help='config files')
+    parser.add_argument('--name', '-n', type=str, default=None, help='name of wandb run')
 
     args = parser.parse_args()
 
-    if args.config_files.endswith('.yaml'):
-        args.config_files = os.path.join('./config', args.config_files)
+    if args.config_files == None:
+        args.config_files = os.path.join('./config', args.model + ".yaml")
     else:
-        args.config_files = os.path.join('./config', args.config_files + ".yaml")
+        if args.config_files.endswith('.yaml'):
+            args.config_files = os.path.join('./config', args.config_files)
+        else:
+            args.config_files = os.path.join('./config', args.config_files + ".yaml")
 
     config = Config(model=args.model, dataset=args.dataset, config_file_list=[args.config_files])
-
+    wandb.init(project="Books_Recommendation", entity="recsys09")
+    wandb.run.name = args.name
     # init random seed
     init_seed(config["seed"], config["reproducibility"])
 
