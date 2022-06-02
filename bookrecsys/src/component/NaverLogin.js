@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 
 class NaverLogin extends Component {
+    
     componentDidMount(){
         const naverScript = document.createElement("script");
         naverScript.src =
@@ -32,6 +33,7 @@ class NaverLogin extends Component {
 
                 else{
                     console.log("Naver 비 로그인 상태")
+                    
                 }
             })
         }

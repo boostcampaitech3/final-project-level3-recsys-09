@@ -1,12 +1,15 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Bookimage from './Bookimage';
 import Booktitle from './Booktitle';
 import Modal from "react-modal";
+import axios from 'axios';
 
 function Bookcover(props){
     
     const [modalIsOpen, setModalIsOpen] = useState(false);
-    
+    const [titles, settitle] = useState("")
+    const [items, setitem] = useState({})
+
     const boardstyle = {
         width:"222px",
         height:"390px",
@@ -53,14 +56,32 @@ function Bookcover(props){
         }
     }
 
+    useEffect(() => {
+        const link = "http://localhost:8000/items/" + props.title
+        axios.get(link)
+        .then(function(responseHandler) {
+            setitem((items) => responseHandler.data[0]); 
+            settitle((titles) => responseHandler.data[0].title)
+        })
+    }, [props.title])
+    
     return <div style={boardstyle}>
-        <div style={tmpstyle} onClick={()=> setModalIsOpen(true)}>
-            <Bookimage link={props.title}/>
-            <Booktitle title={props.title}/>    
-        </div>
-        <Modal style={modalstyle} isOpen={modalIsOpen}>
-        <button style={{float:"right"}} onClick={()=> setModalIsOpen(false)}>X</button>
-        </Modal>
+        {(titles != "") && <div>
+            <div style={tmpstyle} onClick={()=> setModalIsOpen(true)}>
+                <Bookimage link={props.title}/>
+                <Booktitle title={titles}/>    
+            </div>
+            <Modal style={modalstyle} isOpen={modalIsOpen}>
+                <button style={{float:"right"}} onClick={()=> setModalIsOpen(false)}>X</button>
+                <Bookimage link={props.title}/>
+                {items.category}
+                {items.description}
+                {items.brand}
+                {items.price}
+                {items.asin}
+                {items.main_cat}
+            </Modal>
+        </div>}
     </div>
 }
 

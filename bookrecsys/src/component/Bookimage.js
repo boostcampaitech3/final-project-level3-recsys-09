@@ -9,7 +9,7 @@ function Bookimage(props){
         margin:"10px",
         width:"200px",
         height:"260px",
-        border:"1px solid black",
+        //border:"1px solid black",
         display:"flex",
         
     }
@@ -23,7 +23,8 @@ function Bookimage(props){
     }
 
     const imgcenter = {
-        margin:"auto"
+        margin:"auto",
+        
     }
 
     useEffect(() => {
@@ -34,7 +35,7 @@ function Bookimage(props){
     }, [props.link])
 
     return<div style={tmpstyle}>
-        {(link != "x") && <div style={imgcenter}><img src={link}/></div>}
+        {(link != "x") && <div style={imgcenter}><img src={link} style={{height:"240px", width:"180px"}}/></div>}
     </div>
 }
 
