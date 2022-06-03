@@ -246,3 +246,4 @@ saved/
 wandb/
 *.csv
 *.parquet
+lightgbm
