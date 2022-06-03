@@ -65,3 +65,5 @@ valid_metric: Recall@10
 eval_batch_size: 4096
 #########################################################
 # Hyperparameter
+convert_token_to_onehot: True
+token_num_threhold: 5

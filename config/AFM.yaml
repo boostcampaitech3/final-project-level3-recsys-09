@@ -15,12 +15,12 @@ seq_separator: " "
 USER_ID_FIELD: 'user_id'
 ITEM_ID_FIELD: 'item_id'
 TIME_FIELD: 'timestamp'
-RATING_FIELD: 'rating'
+RATING_FIELD: ~
 # seq_len: None
 
 ## label for Point-wise Dataloader
-threshold:
-    rating: 3
+# threshold:
+#     rating: 3
 
 ## Sequential model
 # ITEM_LIST_LENGTH_FIELD (str) : Field name of the feature representing item sequences’ length. Defaults to item_length.
@@ -38,15 +38,15 @@ load_col:
     item: ['item_id', 'item_overall_mean', 'item_first_year', 'item_user_count']
 
 unused_col:
-    inter: ['timestamp']
+    inter: ['rating', 'timestamp']
 #########################################################
 # Training Setting
 epochs: 100
 train_batch_size: 2048
 learner: 'adam'
 learning_rate: 0.001
-# neg_sampling: None
-    # uniform: 1
+neg_sampling:
+    popularity: 1
     # dynamic: 2
 eval_step: 1
 stopping_step: 5

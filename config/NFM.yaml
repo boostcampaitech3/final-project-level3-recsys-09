@@ -65,3 +65,6 @@ valid_metric: Recall@10
 eval_batch_size: 4096
 #########################################################
 # Hyperparameter
+embedding_size: 100
+mlp_hidden_size: [64, 64, 64]
+dropout_prob: 0.2
