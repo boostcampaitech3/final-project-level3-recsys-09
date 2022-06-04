@@ -30,6 +30,7 @@ function Bookselect () {
                                         {idx:5, rate:[false, false, false, false, false], num:-1}])
     
     const [tempreview, settemp] = useState("")
+    const [temptitle, settitle] = useState("")
 
     const [li, setli] = useState(["1", "2", "3", "4", "5", "6"])
     const tli = Api("rand/30")
@@ -51,7 +52,7 @@ function Bookselect () {
 
     const tmpstyle2 = {
         width: "100%",
-        height: "40vh",
+        height: "70vh",
         display: 'flex',
         flexDirection:"row",
         overflow:"auto",
@@ -99,7 +100,7 @@ function Bookselect () {
         content: {
             position: 'absolute',
             width: '1100px',
-            height: '50vh',
+            height: '70vh',
             margin: 'auto',
             border: '1px solid #ccc',
             background: '#fff',
@@ -185,9 +186,15 @@ function Bookselect () {
     }
 
     function submit(i) {
-        setreview(reviews.map(rv =>
-            rv.idx === i ? {idx: i, state:"selected", rate: 0, review: tempreview} : rv)
-        );
+        if (rates[i].num < 1){
+            alert("평점이 필요합니다")
+        }
+        else{
+            setreview(reviews.map(rv =>
+                rv.idx === i ? {idx: i, state:"selected", rate: rates[i].num, review: tempreview} : rv)
+            );
+            change(i)
+        }
     }
 
     function setstar(i, r){
@@ -223,6 +230,15 @@ function Bookselect () {
         settemp(event.currentTarget.value)
     };
 
+    const gettitle = useCallback((asin) => {
+        const link = "http://localhost:8000/title/" + asin
+
+        axios.get(link)
+        .then(function(responseHandler){
+            settitle(responseHandler.data)
+        })
+    })
+    
     return <div>
         <div style={tmpstyle}>
             <h1 style={{textAlign:"center", lineHeight:"250px"}} onClick={()=> {setModalIsOpen(true); setli(tli.slice(0, 6))}}> Book Select</h1>
@@ -232,10 +248,10 @@ function Bookselect () {
             <div style={tmpstyle2}>
                 <div style={{width:"270px"}}>
                     <Bookcover title={li[0]}/>
-                     <div style={selectstyle}><h3 style={{textAlign:"center", lineHeight:"20px"}}  onClick={() => {settemp(""); change(0)}}>{reviews[0].state}</h3></div>
+                     <div style={selectstyle}><h3 style={{textAlign:"center", lineHeight:"20px"}}  onClick={() => {settitle(""); gettitle(li[ii]); settemp(""); change(0)}}>{reviews[0].state}</h3></div>
                      <Modal style={reviewmodalstyle} isOpen={isSelect[0].state}>
                         <button style={{float:"right"}} onClick={()=> change(0)}>X</button>
-                        <h2 style={{textAlign:"center"}}>{li[0]}</h2>
+                        <h2 style={{textAlign:"center"}}>{temptitle}</h2>
                         <div style={{display:"flex", width:"250px", margin:"auto"}}>                   
                             {rates[0].rate[0] === false && <FaStar style={{color: "lightgray"}} size="50" onClick={() => {setstar(0, 1)}}/>}
                             {rates[0].rate[0] && <FaStar style={{color: "black"}} size="50" onClick={() => {setstar(0, 1)}}/>}
@@ -250,17 +266,17 @@ function Bookselect () {
                         </div>
                         <input style={{height:"300px", width:"400px", display:"flex", margin:"auto", fontSize:"15pt", padding:"10px"}} type="text" value={tempreview} onChange={onContentChange}/>
                         <div style={predstyle}>
-                            <div style={buttonstyle2} onClick={() => {submit(0); change(0)}}><h4 style={{textAlign:"center", lineHeight:"0px"}}>Submit</h4></div>
+                            <div style={buttonstyle2} onClick={() => submit(0)}><h4 style={{textAlign:"center", lineHeight:"0px"}}>Submit</h4></div>
                             <div style={buttonstyle2} onClick={() => change(0)}><h4 style={{textAlign:"center", lineHeight:"0px"}}>cancel</h4></div>
                         </div>
                      </Modal>
                 </div>
                 <div style={{width:"270px"}}>
                     <Bookcover title={li[1]}/>
-                     <div style={selectstyle}><h3 style={{textAlign:"center", lineHeight:"20px"}}  onClick={() => {settemp(""); change(1)}}>{reviews[1].state}</h3></div>
+                     <div style={selectstyle}><h3 style={{textAlign:"center", lineHeight:"20px"}}  onClick={() => {settitle(""); gettitle(li[ii + 1]); settemp(""); change(1)}}>{reviews[1].state}</h3></div>
                      <Modal style={reviewmodalstyle} isOpen={isSelect[1].state}>
                         <button style={{float:"right"}} onClick={()=> change(1)}>X</button>
-                        <h2 style={{textAlign:"center"}}>{li[0]}</h2>
+                        {(temptitle != "") && <h2 style={{textAlign:"center"}}>{temptitle}</h2>}
                         <div style={{display:"flex", width:"250px", margin:"auto"}}>                   
                             {rates[1].rate[0] === false && <FaStar style={{color: "lightgray"}} size="50" onClick={() => {setstar(1, 1)}}/>}
                             {rates[1].rate[0] && <FaStar style={{color: "black"}} size="50" onClick={() => {setstar(1, 1)}}/>}
@@ -275,17 +291,17 @@ function Bookselect () {
                         </div>
                         <input style={{height:"300px", width:"400px", display:"flex", margin:"auto", fontSize:"15pt", padding:"10px"}} type="text" value={tempreview} onChange={onContentChange}/>
                         <div style={predstyle}>
-                            <div style={buttonstyle2} onClick={() => {submit(1); change(1)}}><h4 style={{textAlign:"center", lineHeight:"0px"}}>Submit</h4></div>
+                            <div style={buttonstyle2} onClick={() => submit(1)}><h4 style={{textAlign:"center", lineHeight:"0px"}}>Submit</h4></div>
                             <div style={buttonstyle2} onClick={() => change(1)}><h4 style={{textAlign:"center", lineHeight:"0px"}}>cancel</h4></div>
                         </div>
                      </Modal>
                 </div>
                 <div style={{width:"270px"}}>
                     <Bookcover title={li[2]}/>
-                     <div style={selectstyle}><h3 style={{textAlign:"center", lineHeight:"20px"}}  onClick={() => {settemp(""); change(2)}}>{reviews[2].state}</h3></div>
+                     <div style={selectstyle}><h3 style={{textAlign:"center", lineHeight:"20px"}}  onClick={() => {settitle(""); gettitle(li[ii + 2]); settemp(""); change(2)}}>{reviews[2].state}</h3></div>
                      <Modal style={reviewmodalstyle} isOpen={isSelect[2].state}>
                         <button style={{float:"right"}} onClick={()=> change(2)}>X</button>
-                        <h2 style={{textAlign:"center"}}>{li[0]}</h2>
+                        {(temptitle != "") && <h2 style={{textAlign:"center"}}>{temptitle}</h2>}
                         <div style={{display:"flex", width:"250px", margin:"auto"}}>                   
                             {rates[2].rate[0] === false && <FaStar style={{color: "lightgray"}} size="50" onClick={() => {setstar(2, 1)}}/>}
                             {rates[2].rate[0] && <FaStar style={{color: "black"}} size="50" onClick={() => {setstar(2, 1)}}/>}
@@ -300,17 +316,17 @@ function Bookselect () {
                         </div>
                         <input style={{height:"300px", width:"400px", display:"flex", margin:"auto", fontSize:"15pt", padding:"10px"}} type="text" value={tempreview} onChange={onContentChange}/>
                         <div style={predstyle}>
-                            <div style={buttonstyle2} onClick={() => {submit(2); change(2)}}><h4 style={{textAlign:"center", lineHeight:"0px"}}>Submit</h4></div>
+                            <div style={buttonstyle2} onClick={() => submit(2)}><h4 style={{textAlign:"center", lineHeight:"0px"}}>Submit</h4></div>
                             <div style={buttonstyle2} onClick={() => change(2)}><h4 style={{textAlign:"center", lineHeight:"0px"}}>cancel</h4></div>
                         </div>
                      </Modal>
                 </div>
                 <div style={{width:"270px"}}>
                     <Bookcover title={li[3]}/>
-                     <div style={selectstyle}><h3 style={{textAlign:"center", lineHeight:"20px"}}  onClick={() => {settemp(""); change(3)}}>{reviews[3].state}</h3></div>
+                     <div style={selectstyle}><h3 style={{textAlign:"center", lineHeight:"20px"}}  onClick={() => {settitle(""); gettitle(li[ii + 3]); settemp(""); change(3)}}>{reviews[3].state}</h3></div>
                      <Modal style={reviewmodalstyle} isOpen={isSelect[3].state}>
                         <button style={{float:"right"}} onClick={()=> change(3)}>X</button>
-                        <h2 style={{textAlign:"center"}}>{li[3]}</h2>
+                        {(temptitle != "") && <h2 style={{textAlign:"center"}}>{temptitle}</h2>}
                         <div style={{display:"flex", width:"250px", margin:"auto"}}>                   
                             {rates[3].rate[0] === false && <FaStar style={{color: "lightgray"}} size="50" onClick={() => {setstar(3, 1)}}/>}
                             {rates[3].rate[0] && <FaStar style={{color: "black"}} size="50" onClick={() => {setstar(3, 1)}}/>}
@@ -325,17 +341,17 @@ function Bookselect () {
                         </div>
                         <input style={{height:"300px", width:"400px", display:"flex", margin:"auto", fontSize:"15pt", padding:"10px"}} type="text" value={tempreview} onChange={onContentChange}/>
                         <div style={predstyle}>
-                            <div style={buttonstyle2} onClick={() => {submit(3); change(3)}}><h4 style={{textAlign:"center", lineHeight:"0px"}}>Submit</h4></div>
+                            <div style={buttonstyle2} onClick={() => submit(3)}><h4 style={{textAlign:"center", lineHeight:"0px"}}>Submit</h4></div>
                             <div style={buttonstyle2} onClick={() => change(3)}><h4 style={{textAlign:"center", lineHeight:"0px"}}>cancel</h4></div>
                         </div>
                      </Modal>
                 </div>
                 <div style={{width:"270px"}}>
                     <Bookcover title={li[4]}/>
-                     <div style={selectstyle}><h3 style={{textAlign:"center", lineHeight:"20px"}}  onClick={() => {settemp(""); change(4)}}>{reviews[4].state}</h3></div>
+                     <div style={selectstyle}><h3 style={{textAlign:"center", lineHeight:"20px"}}  onClick={() => {settitle(""); gettitle(li[ii + 4]); settemp(""); change(4)}}>{reviews[4].state}</h3></div>
                      <Modal style={reviewmodalstyle} isOpen={isSelect[4].state}>
                         <button style={{float:"right"}} onClick={()=> change(4)}>X</button>
-                        <h2 style={{textAlign:"center"}}>{li[4]}</h2>
+                        {(temptitle != "") && <h2 style={{textAlign:"center"}}>{temptitle}</h2>}
                         <div style={{display:"flex", width:"250px", margin:"auto"}}>                   
                             {rates[4].rate[0] === false && <FaStar style={{color: "lightgray"}} size="50" onClick={() => {setstar(4, 1)}}/>}
                             {rates[4].rate[0] && <FaStar style={{color: "black"}} size="50" onClick={() => {setstar(4, 1)}}/>}
@@ -350,17 +366,17 @@ function Bookselect () {
                         </div>
                         <input style={{height:"300px", width:"400px", display:"flex", margin:"auto", fontSize:"15pt", padding:"10px"}} type="text" value={tempreview} onChange={onContentChange}/>
                         <div style={predstyle}>
-                            <div style={buttonstyle2} onClick={() => {submit(4); change(4)}}><h4 style={{textAlign:"center", lineHeight:"0px"}}>Submit</h4></div>
+                            <div style={buttonstyle2} onClick={() => submit(4)}><h4 style={{textAlign:"center", lineHeight:"0px"}}>Submit</h4></div>
                             <div style={buttonstyle2} onClick={() => change(4)}><h4 style={{textAlign:"center", lineHeight:"0px"}}>cancel</h4></div>
                         </div>
                      </Modal>
                 </div>  
                 <div style={{width:"270px"}}>
                     <Bookcover title={li[5]}/>
-                     <div style={selectstyle}><h3 style={{textAlign:"center", lineHeight:"20px"}}  onClick={() => {settemp(""); change(5)}}>{reviews[5].state}</h3></div>
+                     <div style={selectstyle}><h3 style={{textAlign:"center", lineHeight:"20px"}}  onClick={() => {settitle(""); gettitle(li[ii + 5]); settemp(""); change(5)}}>{reviews[5].state}</h3></div>
                      <Modal style={reviewmodalstyle} isOpen={isSelect[5].state}>
                         <button style={{float:"right"}} onClick={()=> change(5)}>X</button>
-                        <h2 style={{textAlign:"center"}}>{li[5]}</h2>
+                        {(temptitle != "") && <h2 style={{textAlign:"center"}}>{temptitle}</h2>}
                         <div style={{display:"flex", width:"250px", margin:"auto"}}>                   
                             {rates[5].rate[0] === false && <FaStar style={{color: "lightgray"}} size="50" onClick={() => {setstar(5, 1)}}/>}
                             {rates[5].rate[0] && <FaStar style={{color: "black"}} size="50" onClick={() => {setstar(5, 1)}}/>}
@@ -375,7 +391,7 @@ function Bookselect () {
                         </div>
                         <input style={{height:"300px", width:"400px", display:"flex", margin:"auto", fontSize:"15pt", padding:"10px"}} type="text" value={tempreview} onChange={onContentChange}/>
                         <div style={predstyle}>
-                            <div style={buttonstyle2} onClick={() => {submit(5); change(5)}}><h4 style={{textAlign:"center", lineHeight:"0px"}}>Submit</h4></div>
+                            <div style={buttonstyle2} onClick={() => submit(5)}><h4 style={{textAlign:"center", lineHeight:"0px"}}>Submit</h4></div>
                             <div style={buttonstyle2} onClick={() => change(5)}><h4 style={{textAlign:"center", lineHeight:"0px"}}>cancel</h4></div>
                         </div>
                      </Modal>
