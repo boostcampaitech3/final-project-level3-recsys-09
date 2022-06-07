@@ -1,4 +1,5 @@
 from cmath import exp
+from operator import getitem
 from turtle import pd
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
@@ -7,12 +8,15 @@ from pydantic import BaseModel
 import pymongo # import
 from pymongo import MongoClient
 from bson.json_util import loads, dumps
+import uvicorn
 
 import requests
 import json
 import urllib
 
-from inference import load_model
+#from inference import load_model
+#from recommenders.datasets.sparse import AffinityMatrix
+#from recommenders.utils.python_utils import binarize
 import pandas as pd
 import numpy as np
 import random
@@ -32,8 +36,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-df = pd.read_csv("book.csv")
-b = list(df['asin'])
+client = pymongo.MongoClient(mongodb_client)
+db = client["amazon"]
+collection = db["train"]
+query = {}
+cursor = collection.find(query, projection={'_id': 0, 
+                                            "asin": 1})
+
+df = pd.DataFrame.from_dict(cursor)
+b = list(df['asin'].unique())
+print("df : ", len(b))
 
 @app.get("/rand/{idx}")
 def read_item1(idx):
@@ -75,13 +87,20 @@ def load_image(asin):
     except:
         return api_load_image(asin)
     
-@app.get("/inference/{lists}")
-def getpredict(lists):
+@app.get("/inference/{user}")
+def getpredict(user):
     time.sleep(0.1)
-    strings = lists.replace("%2c", "")
-    strings = strings.split(",")
-    strings = [s for s in strings if s != ""]
-    query_items = {"itemID": strings, "rating": [5 for _ in range(len(strings))]}
+    client = MongoClient(mongodb_client)
+    db = client["amazon"]
+    collection = db["train"]
+    query = {'reviewerID': user}
+    cursor = collection.find(query, projection={'_id': 0, 'asin':1, 'reviewText':1, 'overall':1})
+    result = loads(dumps(cursor))
+    
+    items = [item['asin'] for item in result]
+    rate = [item['overall'] for item in result]
+
+    query_items = {"itemID": items, "rating": rate}
 
     model = load_model()
 
@@ -106,17 +125,26 @@ def getpredict(lists):
 li = []
 class Inter(BaseModel):
     id: str
+    asin: str
     rate: int
     review: str
     
 @app.post("/intersave")
-def test(inter:Inter):
-    li.append(inter)
+def intersave(inter:Inter):
     
-@app.get("/test2")
-def t2():
-    return(li)
-    
+    client = pymongo.MongoClient(mongodb_client)
+    db = client["amazon"]
+    collection = db["train"]
+    if inter.review:
+        query = {'asin': inter.asin, 'reviewerID': inter.id, 'overall': inter.rate, 'reviewText': inter.review}
+    else:
+        query = {'asin': inter.asin, 'reviewerID': inter.id, 'overall': inter.rate}
+    try:
+        cursor = collection.insert_one(query)
+        return "done"
+    except:
+        return "fail"
+
 @app.get("/items/{asin}")
 def get_item(asin):
     time.sleep(0.54)
@@ -127,3 +155,12 @@ def get_item(asin):
     cursor = collection.find(query, projection={'_id': False})
     result = loads(dumps(cursor))
     return result
+
+@app.get("/title/{asin}")
+def get_title(asin):
+    items = get_item(asin)
+    return items[0]['title']
+    
+    
+if __name__ == "__main__":
+    uvicorn.run(app, host='0.0.0.0', port=8080)
