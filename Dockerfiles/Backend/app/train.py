@@ -2,10 +2,6 @@ import argparse
 import yaml
 import os
 
-from recommenders.models.vae.multinomial_vae import Mult_VAE
-from recommenders.utils.timer import Timer
-import tensorflow._api.v2.compat.v1 as tf2
-
 from utils import *
 
 if __name__ == "__main__":

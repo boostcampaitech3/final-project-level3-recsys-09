@@ -13,8 +13,6 @@ import json
 import urllib
 
 from inference import load_model
-from recommenders.datasets.sparse import AffinityMatrix
-from recommenders.utils.python_utils import binarize
 import pandas as pd
 import numpy as np
 import random
