@@ -9,7 +9,7 @@ import { FaStar } from 'react-icons/fa';
 import { useSelector, useDispatch } from "react-redux"
 
 function Bookselect () {
-
+    
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [isSelect, setSelected] = useState([{idx: 0, state:false}, {idx: 1, state:false},
                                             {idx: 2, state:false}, {idx: 3, state:false},

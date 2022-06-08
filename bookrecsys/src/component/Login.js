@@ -26,7 +26,7 @@ function Login(props){
         content: {
             position: 'absolute',
             width: "300px",
-            height: "500px",
+            height: "210px",
             margin:"auto",
             border: '1px solid #ccc',
             background: '#fff',
@@ -40,7 +40,18 @@ function Login(props){
 
     const onContentChange = (event) => {
         setContentValue(event.currentTarget.value);
-      };
+    };
+
+    const login = () => {
+        
+        if (ContentValue == ""){
+            alert("ID를 입력하세요")
+        }
+        else{
+            dispatch({type : 'login', payload: ContentValue}); 
+            setModalIsOpen(false);
+        }
+    }
 
     return <div>
         {(ID.login === "login") && <button style={{float:"right", marginBottom:"1%"}} onClick={()=> setModalIsOpen(true)}>{ID.login}</button>}
@@ -52,9 +63,8 @@ function Login(props){
                 <h2 style={{display:"flex", margin:"auto"}}>ID :</h2><input onChange={onContentChange} value={ContentValue} name="content" type="text" style={{height:"20px", margin:"auto"}}/>
 
             </div>  
-            <div style={{border:"1px solid black", width:"45px", margin:"auto", textAlign:"center", borderRadius: '5px'}} onClick={() => {dispatch({type : 'login', payload: ContentValue}); setModalIsOpen(false)}}>login</div>
+            <div style={{border:"1px solid black", width:"45px", margin:"auto", textAlign:"center", borderRadius: '5px'}} onClick={() => login()}>login</div>
             <div style={{height:"30px"}}/>
-            <NaverLogin />
         </Modal>
 
       </div>

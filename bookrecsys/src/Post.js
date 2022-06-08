@@ -8,7 +8,7 @@ function Post(props){
 
     function content(props){
         alert(props)
-        const link = "http://localhost:8000/" + props
+        const link = "http://localhost:8000/test1"
         axios.get(link)
         .then(function(responseHandler) {
             setitem((item) => responseHandler.data);
@@ -16,8 +16,7 @@ function Post(props){
     }
     
     useEffect(() => {
-        alert(props)
-        content(props)
+        content()
     }, [])
 
     return item

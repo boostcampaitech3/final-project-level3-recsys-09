@@ -7,7 +7,7 @@ function TCalendar(props){
     const [value, onChange] = useState(new Date());
 
     
-    return <div>
+    return <div style={{display:"flex", margin:"auto"}}>
         <Calendar onChange={onChange} value={value}/>
     </div>
 }

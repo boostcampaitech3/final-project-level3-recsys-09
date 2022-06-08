@@ -36,16 +36,6 @@ function Ranklist(props){
             <Bookcover title={rlist[7]} link={rlist[7]}/>
             <Bookcover title={rlist[8]} link={rlist[8]}/>
             <Bookcover title={rlist[9]} link={rlist[9]}/>
-            <Bookcover title={rlist[10]} link={rlist[10]}/>
-            <Bookcover title={rlist[11]} link={rlist[11]}/>
-            <Bookcover title={rlist[12]} link={rlist[12]}/>
-            <Bookcover title={rlist[13]} link={rlist[13]}/>
-            <Bookcover title={rlist[14]} link={rlist[14]}/>
-            <Bookcover title={rlist[15]} link={rlist[15]}/>
-            <Bookcover title={rlist[16]} link={rlist[16]}/>
-            <Bookcover title={rlist[17]} link={rlist[17]}/>
-            <Bookcover title={rlist[18]} link={rlist[18]}/>
-            <Bookcover title={rlist[19]} link={rlist[19]}/>
     </div></div>
 
 }  
