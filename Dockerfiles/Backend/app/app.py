@@ -68,7 +68,7 @@ app.add_middleware(
 )
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--model_path', '-m', type=str, default='saved/MacridVAE-Jun-09-2022_02-22-05.pth', help='name of models')
+parser.add_argument('--model_path', '-m', type=str, default='saved/MacridVAE-cpu.pth', help='name of models')
 # python run_inference.py --model_path=/opt/ml/input/RecBole/saved/SASRecF-Apr-07-2022_03-17-16.pth 로 실행
 args, _ = parser.parse_known_args()
 
