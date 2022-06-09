@@ -26,7 +26,7 @@ df.columns = ["userID", "itemID", "rating", "timestamp"]
 
 # .inter file 생성
 
-TARGET_DIR = os.path.join(os.getcwd(), "/workspace/data/boostcamp")
+TARGET_DIR = os.path.join(os.getcwd(), "../data/boostcamp")
 TARGET_NAME = "boostcamp.inter"
 
 os.makedirs(TARGET_DIR, exist_ok=True)
