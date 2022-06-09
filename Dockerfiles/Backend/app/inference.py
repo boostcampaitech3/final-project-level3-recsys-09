@@ -5,6 +5,11 @@ import yaml
 
 from utils import *
 
+from recommenders.models.vae.multinomial_vae import Mult_VAE
+from recommenders.datasets.sparse import AffinityMatrix
+import tensorflow._api.v2.compat.v1 as tf2
+
+
 def load_model():
     config_file = "./config/config.yaml"
     with open(config_file, "r") as f:

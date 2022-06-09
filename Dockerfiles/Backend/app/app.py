@@ -8,15 +8,14 @@ from pydantic import BaseModel
 import pymongo # import
 from pymongo import MongoClient
 from bson.json_util import loads, dumps
-import uvicorn
 
 import requests
 import json
 import urllib
 
-#from inference import load_model
-#from recommenders.datasets.sparse import AffinityMatrix
-#from recommenders.utils.python_utils import binarize
+from inference import load_model
+from recommenders.datasets.sparse import AffinityMatrix
+from recommenders.utils.python_utils import binarize
 import pandas as pd
 import numpy as np
 import random
@@ -38,7 +37,7 @@ app.add_middleware(
 
 client = pymongo.MongoClient(mongodb_client)
 db = client["amazon"]
-collection = db["train"]
+collection = db["books"]
 query = {}
 cursor = collection.find(query, projection={'_id': 0, 
                                             "asin": 1})
@@ -86,7 +85,18 @@ def load_image(asin):
         return cursor['image_url'][0]
     except:
         return api_load_image(asin)
-    
+
+@app.get("/userdata/{user}")
+def getuserdata(user):
+    time.sleep(0.1)
+    client = MongoClient(mongodb_client)
+    db = client["amazon"]
+    collection = db["train"]
+    query = {'reviewerID': user}
+    cursor = collection.find(query, projection={'_id': 0, 'asin':1, 'reviewText':1, 'overall':1, 'title':1, 'startdate':1, 'enddate':1})
+    result = loads(dumps(cursor))
+    return result
+
 @app.get("/inference/{user}")
 def getpredict(user):
     time.sleep(0.1)
@@ -94,14 +104,13 @@ def getpredict(user):
     db = client["amazon"]
     collection = db["train"]
     query = {'reviewerID': user}
-    cursor = collection.find(query, projection={'_id': 0, 'asin':1, 'reviewText':1, 'overall':1})
+    cursor = collection.find(query, projection={'_id': 0, 'asin':1, 'overall':1})
     result = loads(dumps(cursor))
     
-    items = [item['asin'] for item in result]
-    rate = [item['overall'] for item in result]
-
+    items = [i['asin'] for i in result]
+    rate = [i['overall'] for i in result]
     query_items = {"itemID": items, "rating": rate}
-
+    
     model = load_model()
 
     df = pd.DataFrame.from_dict(query_items)
@@ -125,9 +134,12 @@ def getpredict(user):
 li = []
 class Inter(BaseModel):
     id: str
+    title: str
     asin: str
     rate: int
     review: str
+    startdate: str
+    enddate: str
     
 @app.post("/intersave")
 def intersave(inter:Inter):
@@ -136,9 +148,9 @@ def intersave(inter:Inter):
     db = client["amazon"]
     collection = db["train"]
     if inter.review:
-        query = {'asin': inter.asin, 'reviewerID': inter.id, 'overall': inter.rate, 'reviewText': inter.review}
+        query = {'asin': inter.asin, 'title':inter.title, 'reviewerID': inter.id, 'overall': inter.rate, 'reviewText': inter.review, 'startdate':inter.startdate, 'enddate':inter.enddate}
     else:
-        query = {'asin': inter.asin, 'reviewerID': inter.id, 'overall': inter.rate}
+        query = {'asin': inter.asin, 'title':inter.title, 'reviewerID': inter.id, 'overall': inter.rate, 'startdate':inter.startdate, 'enddate':inter.enddate}
     try:
         cursor = collection.insert_one(query)
         return "done"
@@ -154,13 +166,60 @@ def get_item(asin):
     query = {'asin': asin}
     cursor = collection.find(query, projection={'_id': False})
     result = loads(dumps(cursor))
-    return result
+    return result[0]
 
 @app.get("/title/{asin}")
 def get_title(asin):
     items = get_item(asin)
     return items[0]['title']
+
+
+def quick_img(asin):
+    client = pymongo.MongoClient(mongodb_client)
+    # db(=database): "recsys09"의 "amazon" 데이터베이스
+    db = client["amazon"]
+    # Collection(=table): "amazon" 데이터 베이스의 "books" 테이블
+    Collection = db["url"]
     
-    
-if __name__ == "__main__":
-    uvicorn.run(app, host='0.0.0.0', port=8080)
+    query = {'asin': asin}
+    cursor = Collection.find_one(filter=query ,projection={'image_url' : True})
+    try:
+        return cursor['image_url'][0]
+    except:
+        return api_load_image(asin)
+
+@app.get("/itemsli/{item}")
+def get_itemsli(item):
+    client = pymongo.MongoClient("mongodb://118.67.143.144:30001/")
+
+    db = client["amazon"]
+    collection = db["books"]
+
+    search_word = item
+
+    query = {"title": {"$regex": search_word, "$options": "i"}}
+
+    cursor = collection.find(filter=query, projection={"_id": False, "asin": True, "title":True, "category":True, "description":True, "price":True}).skip(0).limit(10)
+
+    li = []
+    for result in cursor:
+        tmp = result
+        tmp.update({"imgurl":quick_img(result['asin'])})
+        li.append(tmp)
+    return li
+
+@app.post("/del")
+def item_delete(inter:Inter):
+    client = pymongo.MongoClient("mongodb://118.67.143.144:30001/")
+    db = client["amazon"]
+    collection = db["train"]
+    query = {'asin': inter.asin, 'title':inter.title, 'reviewerID': inter.id, 'overall': inter.rate, 'reviewText': inter.review, 'startdate':inter.startdate, 'enddate':inter.enddate}
+    cursor = collection.delete_one(query)
+
+@app.get("/delete/{user}")
+def fsafa(user):
+    client = pymongo.MongoClient("mongodb://118.67.143.144:30001/")
+    db = client["amazon"]
+    collection = db["train"]
+    query = {"user":user}
+    cursor = collection.delete_many(query)
