@@ -13,7 +13,7 @@ export const Table = (props) =>{
       </div>)
   });
   
-  return <div style={{display:"flex", width:"1100px", height:"600px", flexDirection:"column", overflow:"auto"}}>
+  return <div style={{display:"flex", width:"1178px", height:"600px", flexDirection:"column", overflow:"auto"}}>
     <Columns idx={" "} Title={"title"} rate={"rate"} review={"review"} Date1={"start date"} Date2={"end date"} bgcolor={"#E2E2E2"}/>
     {table}
     

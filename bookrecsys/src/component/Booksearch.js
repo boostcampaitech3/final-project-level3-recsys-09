@@ -194,29 +194,29 @@ function Booksearch(props){
     }
 
     const result = tmplist.map((items) => {
-        return <div style={{margin:"20px", border:"1px solid black", height:"300px", display:"flex", width:"95%"}}>
+        return <div style={{margin:"20px", border:"1px solid black", height:"300px", display:"flex", width:"96.5%"}}>
             <img src={items.imgurl} style={{display:"flex", width:"220px", height:"280px", margin:"10px"}}/>
             <div style={{display:"flex", margin:"20px"}}>
                 <div>
                     <div style={{display:"flex"}}>
                         <div style={{width:"110px", height:"50px"}}><h3 style={{textAlign:"center"}}>title : </h3></div>
-                        <div style={{width:"1000px", height:"50px"}}><p>{items.title}</p></div>
+                        <div style={{width:"700px", height:"50px"}}><p>{items.title}</p></div>
                     </div>
                     <div style={{display:"flex"}}>
                         <div style={{width:"110px", height:"40px"}}><h3 style={{textAlign:"center"}}>category : </h3></div>
-                        <div style={{width:"1000px", height:"40px"}}><p>{items.category}</p></div>
+                        <div style={{width:"700px", height:"40px"}}><p>{items.category}</p></div>
                     </div>
                     <div style={{display:"flex"}}>
                         <div style={{width:"110px", height:"100px"}}><h3 style={{textAlign:"center"}}>description : </h3></div>
-                        <div style={{width:"1000px", height:"100px", overflow:"auto"}}><p>{items.description}</p></div>
+                        <div style={{width:"700px", height:"100px", overflow:"auto"}}><p>{items.description}</p></div>
                     </div>
                     <div style={{display:"flex"}}>
                         <div style={{width:"110px", height:"40px"}}><h3 style={{textAlign:"center"}}>price : </h3></div>
-                        <div style={{width:"1000px", height:"40px"}}><p>{items.price}</p></div>
+                        <div style={{width:"700px", height:"40px"}}><p>{items.price}</p></div>
                     </div>
                     <div style={{display:"flex"}}>
                         <div style={{width:"110px", height:"40px"}}><h3 style={{textAlign:"center"}}>asin : </h3></div>
-                        <div style={{width:"1000px", height:"40px"}}><p>{items.asin}</p></div>
+                        <div style={{width:"700px", height:"40px"}}><p>{items.asin}</p></div>
                     </div>
                 </div>
             
@@ -265,7 +265,7 @@ function Booksearch(props){
                 <Table id={ID.ID} data={data}/>
             </div>
             <div style={{display:"flex", margin:"auto"}}>
-                <TCalendar data={data}/>
+                
             </div>
         </div>
     </div>

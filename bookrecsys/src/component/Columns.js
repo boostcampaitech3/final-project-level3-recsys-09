@@ -61,12 +61,12 @@ function Columns(props){
 
     return <div>
     {(view) && <div style={{display:"flex", width:"100%", flexDirection:"row", background:props.bgcolor}}>
-        <div style={{display:"flex", borderRight:"1px solid #D0CFD2", height:"4vh", width:"5%"}}><p style={{textAlign:"center", margin:"auto"}}>{props.idx}</p></div>
-        <div style={{display:"flex", borderRight:"1px solid #D0CFD2", height:"4vh", width:"20%"}}><p style={{textAlign:"center", margin:"auto"}}>{props.Title}</p></div>
-        <div style={{display:"flex", borderRight:"1px solid #D0CFD2", height:"4vh", width:"5%"}}><p style={{textAlign:"center", margin:"auto"}}>{props.rate}</p></div>
-        <div style={{display:"flex", borderRight:"1px solid #D0CFD2", height:"4vh", width:"42%"}}><p style={{textAlign:"center", margin:"auto"}}>{props.review}</p></div>
-        <div style={{display:"flex", borderRight:"1px solid #D0CFD2", height:"4vh", width:"14%"}}><p style={{textAlign:"center", margin:"auto"}}>{props.Date1}</p></div>
-        <div style={{display:"flex", borderRight:"1px solid #D0CFD2", height:"4vh", width:"14%"}}><p style={{textAlign:"center", margin:"auto"}}>{props.Date2}</p></div>
+        <div style={{display:"flex", borderRight:"1px solid #D0CFD2", height:"6.5vh", width:"5%"}}><p style={{textAlign:"center", margin:"auto"}}>{props.idx}</p></div>
+        <div style={{display:"flex", borderRight:"1px solid #D0CFD2", height:"6.5vh", width:"20%", overflow:"auto"}}><p style={{textAlign:"center", margin:"auto"}}>{props.Title}</p></div>
+        <div style={{display:"flex", borderRight:"1px solid #D0CFD2", height:"6.5vh", width:"5%"}}><p style={{textAlign:"center", margin:"auto"}}>{props.rate}</p></div>
+        <div style={{display:"flex", borderRight:"1px solid #D0CFD2", height:"6.5vh", width:"42%", overflow:"auto"}}><p style={{textAlign:"center", margin:"auto"}}>{props.review}</p></div>
+        <div style={{display:"flex", borderRight:"1px solid #D0CFD2", height:"6.5vh", width:"14%"}}><p style={{textAlign:"center", margin:"auto"}}>{props.Date1}</p></div>
+        <div style={{display:"flex", borderRight:"1px solid #D0CFD2", height:"6.5vh", width:"14%"}}><p style={{textAlign:"center", margin:"auto"}}>{props.Date2}</p></div>
         <div style={{display:"flex", height:"4vh", width:"5%"}} onClick={() => setopen(true)}><p style={{textAlign:"center", margin:"auto"}}>{(props.rate != "rate" && props.rate != "") && <button>X</button>}</p></div>
         <Modal isOpen={isopen} style={modalstyle}>
             <button style={{float:"right"}} onClick={() => setopen(false)}>X</button>
