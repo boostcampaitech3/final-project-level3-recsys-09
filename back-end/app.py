@@ -72,11 +72,7 @@ parser.add_argument('--model_path', '-m', type=str, default='saved/MacridVAE-Jun
 # python run_inference.py --model_path=/opt/ml/input/RecBole/saved/SASRecF-Apr-07-2022_03-17-16.pth 로 실행
 args, _ = parser.parse_known_args()
 
-if torch.cuda.is_available():
-    args.cuda = True
-else:
-    args.cuda = False
-device = torch.device("cuda" if args.cuda else "cpu")
+device = torch.device("cpu")
 # model, dataset 불러오기
 
 config, model, dataset, train_data, valid_data, test_data = load_data_and_model(args.model_path)
