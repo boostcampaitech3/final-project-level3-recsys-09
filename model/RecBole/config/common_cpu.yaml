@@ -1,6 +1,7 @@
 # Environment Settings
 seed: 2020
 reproducibility: True
+use_gpu: False
 data_path: ../data/
 checkpoint_dir: 'saved/'
 show_progress: True
