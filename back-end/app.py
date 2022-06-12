@@ -68,11 +68,15 @@ app.add_middleware(
 )
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--model_path', '-m', type=str, default='saved/MacridVAE-Jun-09-2022_02-22-05.pth', help='name of models')
+parser.add_argument('--model_path', '-m', type=str, default='saved/MacridVAE-cpu_final.pth', help='name of models')
 # python run_inference.py --model_path=/opt/ml/input/RecBole/saved/SASRecF-Apr-07-2022_03-17-16.pth 로 실행
 args, _ = parser.parse_known_args()
 
-device = torch.device("cpu")
+if torch.cuda.is_available():
+    args.cuda = True
+else:
+    args.cuda = False
+device = torch.device("cuda" if args.cuda else "cpu")
 # model, dataset 불러오기
 
 config, model, dataset, train_data, valid_data, test_data = load_data_and_model(args.model_path)
@@ -185,21 +189,33 @@ def getpredict(user):
     asin = [i['asin'] for i in result]
     overall = [((int(i['overall']) - 1) / 4) for i in result]
     
-    item_list = dataset.token2id(dataset.iid_field, asin)
+    item_list = []
+    for a in asin:
+        try:
+            item_list.append(dataset.token2id(dataset.iid_field, a))
+        except: 
+            del overall[asin.index(a)]
+
+    item_list = np.array(item_list)
     top_k = 10
     
     rating_matrix = torch.zeros(1).to(device).repeat(1, dataset.item_num)
     
     row_indices = torch.zeros(1).to(device).repeat(len(item_list)).type(torch.int64)
-    col_indices = torch.from_numpy(item_list)
-    item_values = torch.Tensor(overall).to(device)
-    rating_matrix.index_put_((row_indices, col_indices), item_values)
-    score, _, _ = model.forward(rating_matrix)
-    prediction = torch.topk(score, top_k).indices
-    prediction = dataset.id2token(dataset.iid_field, prediction.cpu())[0]
-    return prediction
-    
 
+    col_indices = torch.from_numpy(item_list).type(torch.LongTensor)
+    
+    item_values = torch.Tensor(overall).to(device)
+    
+    rating_matrix.index_put_((row_indices, col_indices), item_values)
+    
+    score, _, _ = model.forward(rating_matrix)
+    
+    prediction = torch.topk(score, top_k).indices
+    
+    prediction = dataset.id2token(dataset.iid_field, prediction.cpu())[0]
+
+    return list(prediction)
     
 
 li = []
