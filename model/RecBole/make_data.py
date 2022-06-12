@@ -16,17 +16,18 @@ cursor = collection.find(
         "reviewerID": True,
         "asin": True,
         "overall": True,
-        "unixReviewTime": True,
-    },
+        "unixReviewTime": True
+    }
 )
 
 df = pd.DataFrame.from_dict(cursor)
-df.columns = ["userID", "itemID", "rating", "timestamp"]
+
+df.columns = ["rating", "userID", "itemID", "timestamp"]
 
 
 # .inter file 생성
 
-TARGET_DIR = os.path.join(os.getcwd(), "/workspace/data/boostcamp")
+TARGET_DIR = os.path.join(os.getcwd(), "../data/boostcamp")
 TARGET_NAME = "boostcamp.inter"
 
 os.makedirs(TARGET_DIR, exist_ok=True)
@@ -39,6 +40,7 @@ df = df.rename(
         "timestamp": "timestamp:float",
     }
 )
+
 df.to_csv(os.path.join(TARGET_DIR, TARGET_NAME), index=False, sep="\t")
 
 print("Done!")

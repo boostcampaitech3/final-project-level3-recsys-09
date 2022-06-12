@@ -1,7 +1,7 @@
 # Environment Settings
 seed: 2020
 reproducibility: True
-data_path: /workspace/data/
+data_path: ../data/
 checkpoint_dir: 'saved/'
 show_progress: True
 log_wandb: True
