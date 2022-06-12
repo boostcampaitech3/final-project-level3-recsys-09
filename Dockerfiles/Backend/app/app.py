@@ -162,7 +162,7 @@ def getuserdata(user):
 
     db = client["amazon"]
 
-    collection = db["train"]
+    collection = db["tmp"]
 
     query = {'reviewerID': user}
 
@@ -181,7 +181,7 @@ def getpredict(user):
     
     client = MongoClient(mongodb_client)
     db = client["amazon"]
-    collection = db["train"]
+    collection = db["tmp"]
     query = {'reviewerID': user}
     
     cursor = collection.find(query, projection={'_id': 0, 'asin':1, 'overall':1})
@@ -236,7 +236,7 @@ def intersave(inter:Inter):
 
     db = client["amazon"]
 
-    collection = db["train"]
+    collection = db["tmp"]
 
     if inter.review:
 
@@ -368,7 +368,7 @@ def item_delete(inter:Inter):
 
     db = client["amazon"]
 
-    collection = db["train"]
+    collection = db["tmp"]
 
     query = {'asin': inter.asin, 'title':inter.title, 'reviewerID': inter.id, 'overall': inter.rate, 'reviewText': inter.review, 'startdate':inter.startdate, 'enddate':inter.enddate}
 
@@ -384,7 +384,7 @@ def fsafa(user):
 
     db = client["amazon"]
 
-    collection = db["train"]
+    collection = db["tmp"]
 
     query = {"user":user}
 

@@ -11,15 +11,8 @@ RUN mkdir -p /app
 RUN mkdir -p "/workspace/data/boostcamp/"
 COPY ./requirements.txt /app
 WORKDIR /app
-RUN pip install -r requirements.txt
-COPY ./app/ /app
+RUN pip install --no-cache-dir --upgrade -r requirements.txt
+COPY ./app/ /app/
+RUN cp /app/boostcamp.inter /workspace/data/boostcamp/
 EXPOSE 8080
-
-
-
-#RUN apt-get install -y build-essential libpython
-
-
-#CMD ["uvicorn", "app.py:app", "--host", "localhost", "--port", "8080", "--reload"]
-RUN ["python3", "make_data.py"]
-CMD ["python3", "app.py"]
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8080"]
