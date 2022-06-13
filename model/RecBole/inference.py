@@ -7,7 +7,7 @@ if __name__ == '__main__':
     
     parser = argparse.ArgumentParser()
     parser.add_argument('--model_path', '-m', type=str, default='saved/MacridVAE-Jun-09-2022_08-42-00.pth', help='name of models')
-    
+
     # python run_inference.py --model_path=/opt/ml/input/RecBole/saved/SASRecF-Apr-07-2022_03-17-16.pth 로 실행
     
     args, _ = parser.parse_known_args()
@@ -18,9 +18,9 @@ if __name__ == '__main__':
     config, model, dataset, train_data, valid_data, test_data = load_data_and_model(args.model_path)
 
     model.eval()
-
+    # User의 이름
     new_target = 'lck'
-
+    # User의 독서 이력 - 추론 시 필요한 요소
     asin_list = ['0001720392', '0007173156', '0030845742', '0060248025']
 
     item_list = dataset.token2id(dataset.iid_field, asin_list)
