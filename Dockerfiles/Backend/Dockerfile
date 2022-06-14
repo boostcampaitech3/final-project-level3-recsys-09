@@ -7,12 +7,12 @@ ENV	PYTHONFAULTHANDLER=1 \
 	PIP_DISABLE_PIP_VERSION_CHECK=on \
 	PIP_DEFAULT_TIMEOUT=100
 
-RUN mkdir -p /app
-RUN mkdir -p "/workspace/data/boostcamp/"
+RUN mkdir -p /app/saved
+RUN mkdir -p "../data/boostcamp/"
 COPY ./requirements.txt /app
 WORKDIR /app
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
 COPY ./app/ /app/
-RUN cp /app/boostcamp.inter /workspace/data/boostcamp/
-RUN cp /app/MacridVAE-cpu_final.pth /saved/
+RUN cp /app/boostcamp.inter ../data/boostcamp/
+RUN cp /app/MacridVAE-cpu_final.pth /app/saved/
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8080"]
