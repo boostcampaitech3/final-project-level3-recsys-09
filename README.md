@@ -1,5 +1,6 @@
 # 저희 잘하조 Recsys 9조
 
+# 북스비 <img src="https://user-images.githubusercontent.com/43275710/173737385-603dfce5-7d30-47f6-a337-b033bf5c0a0e.png" height="40" width="40">
 
 
 ## 프로젝트 개요
